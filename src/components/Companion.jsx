@@ -1,6 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { chatWithCompanion } from '../services/aiService';
-import { Send, Mic, MicOff, Volume2, VolumeX, Sparkles, MessageSquare, Bot, User } from 'lucide-react';
+import { Send, Mic, MicOff, Volume2, VolumeX, Sparkles, MessageSquare, Bot, User, Shield } from 'lucide-react';
+
+const scanForSensitiveInfo = (text) => {
+  const t = text.toLowerCase();
+  
+  // Regex patterns
+  const aadhaarRegex = /\b\d{4}[ -]?\d{4}[ -]?\d{4}\b/;
+  const panRegex = /\b[a-z]{5}\d{4}[a-z]\b/i;
+  const cardRegex = /\b\d{4}[ -]?\d{4}[ -]?\d{4}[ -]?\d{4}\b/;
+  const ifscRegex = /\b[a-z]{4}0[a-z0-9]{6}\b/i;
+  
+  // Keyword triggers
+  const keywords = ["cvv", "cvc", "otp", "password", "upi pin", "netbanking", "passcode", "bank account"];
+  
+  const hasAadhaar = aadhaarRegex.test(text);
+  const hasPan = panRegex.test(text);
+  const hasCard = cardRegex.test(text);
+  const hasIfsc = ifscRegex.test(text);
+  const hasKeyword = keywords.some(kw => t.includes(kw));
+  
+  return hasAadhaar || hasPan || hasCard || hasIfsc || hasKeyword;
+};
+
 
 
 const QUICK_CHIPS = [
@@ -31,6 +53,10 @@ export default function Companion() {
   const [inputText, setInputText] = useState('');
   const [selectedLang, setSelectedLang] = useState('English');
   const [loading, setLoading] = useState(false);
+  
+  // Safety states
+  const [showWarningDialog, setShowWarningDialog] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState('');
   
   // Voice Synthesis & Recognition states
   const [isListening, setIsListening] = useState(false);
@@ -64,9 +90,7 @@ export default function Companion() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSendMessage = async (textToSend) => {
-    if (!textToSend.trim()) return;
-
+  const executeSendMessage = async (textToSend) => {
     // Add user message
     const userMsg = {
       id: Date.now(),
@@ -98,6 +122,17 @@ export default function Companion() {
     };
     setMessages(prev => [...prev, botMsg]);
     setLoading(false);
+  };
+
+  const handleSendMessage = async (textToSend) => {
+    if (!textToSend.trim()) return;
+
+    if (scanForSensitiveInfo(textToSend)) {
+      setPendingMessage(textToSend);
+      setShowWarningDialog(true);
+    } else {
+      executeSendMessage(textToSend);
+    }
   };
 
   // Trigger Speech Recognition
@@ -270,6 +305,19 @@ export default function Companion() {
         </div>
       )}
 
+      {/* AI Safety Shield Card */}
+      <div className="mx-4 my-2 p-3 bg-slate-900/10 border border-slate-700/10 rounded-xl flex items-start gap-2.5 text-xs text-slate-500">
+        <Shield className="text-indigo-600 shrink-0 mt-0.5" size={16} />
+        <div>
+          <h5 className="font-bold text-slate-700 flex items-center gap-1.5 mb-0.5">
+            AI Safety Shield
+          </h5>
+          <p className="text-[11px] leading-relaxed">
+            For your privacy and security, please avoid sharing sensitive personal information such as Aadhaar numbers, PAN numbers, bank account details, passwords, OTPs, CVV numbers, or UPI PINs.
+          </p>
+        </div>
+      </div>
+
       {/* Input Form */}
       <form
         onSubmit={(e) => {
@@ -308,6 +356,56 @@ export default function Companion() {
           <Send size={20} />
         </button>
       </form>
+
+      {/* Privacy Reminder */}
+      <div className="pb-3 text-center text-[10px] text-slate-400">
+        Your privacy matters. Please avoid sharing confidential personal information.
+      </div>
+
+      {/* Warning Dialog Modal */}
+      {showWarningDialog && (
+        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-6 z-50 animate-fadeIn">
+          <div className="bg-slate-900 border border-slate-700/60 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div className="flex items-center gap-2.5 text-orange-500">
+              <span className="text-xl">⚠️</span>
+              <h4 className="font-bold text-slate-100 text-sm">Sensitive Information Detected</h4>
+            </div>
+            
+            <p className="text-xs text-slate-200 leading-relaxed">
+              It looks like your message may contain sensitive personal or financial information.
+              <br /><br />
+              For your security, BharatSathi AI recommends removing or masking these details before continuing.
+              Never share passwords, OTPs, PINs, or banking credentials with any AI assistant.
+            </p>
+            
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowWarningDialog(false);
+                  setPendingMessage('');
+                }}
+                className="flex-1 py-2 border border-slate-700/60 hover:bg-slate-850 text-slate-100 text-xs font-semibold rounded-lg transition-all"
+              >
+                Edit Message
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  setShowWarningDialog(false);
+                  if (pendingMessage) {
+                    executeSendMessage(pendingMessage);
+                  }
+                }}
+                className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition-all shadow"
+              >
+                Continue Anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
