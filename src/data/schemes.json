@@ -1,0 +1,179 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+    "category": "Agriculture",
+    "description": "An initiative by the Government of India that provides up to ₹6,000 per year in three equal installments to all landholding farmer families.",
+    "benefits": "₹6,000 per year directly transferred to the bank accounts of farmers.",
+    "eligibility": {
+      "occupations": ["Farmer"],
+      "maxIncome": null,
+      "ageMin": 18,
+      "ageMax": null,
+      "gender": "All",
+      "extra": "Must own agricultural land. Exclusion criteria applies to high income/professional taxpayers."
+    },
+    "documents": [
+      "Aadhaar Card",
+      "Landholding Documents (Khatauni/Patta)",
+      "Bank Account Details",
+      "Mobile Number linked with Aadhaar"
+    ],
+    "officialLink": "https://pmkisan.gov.in/"
+  },
+  {
+    "id": "ayushman-bharat",
+    "name": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (PM-JAY)",
+    "category": "Healthcare",
+    "description": "The largest health assurance scheme in the world, aiming to provide free health cover of up to ₹5 Lakh per family per year for secondary and tertiary care hospitalization.",
+    "benefits": "Cashless health insurance cover of up to ₹5,00,000 per family per year for hospitalization.",
+    "eligibility": {
+      "occupations": ["All", "Farmer", "Student", "Unemployed"],
+      "maxIncome": 120000,
+      "ageMin": null,
+      "ageMax": null,
+      "gender": "All",
+      "extra": "Identified households based on deprivation and occupational criteria in SECC 2011 database, or low income families below poverty line."
+    },
+    "documents": [
+      "Aadhaar Card or Voter ID",
+      "Ration Card",
+      "Income Certificate",
+      "PM-JAY Letter/Card"
+    ],
+    "officialLink": "https://pmjay.gov.in/"
+  },
+  {
+    "id": "pm-mudra",
+    "name": "Pradhan Mantri Mudra Yojana (PMMY)",
+    "category": "Business",
+    "description": "Provides loans up to ₹10 Lakh to non-corporate, non-farm small/micro enterprises. Divided into Shishu (up to ₹50k), Kishor (₹50k-₹5L), and Tarun (₹5L-₹10L) categories.",
+    "benefits": "Collateral-free business loans up to ₹10,00,000 for starting or expanding micro-business units.",
+    "eligibility": {
+      "occupations": ["Business", "Farmer"],
+      "maxIncome": null,
+      "ageMin": 18,
+      "ageMax": 65,
+      "gender": "All",
+      "extra": "Any Indian citizen who has a business plan for a non-farm income-generating activity, such as manufacturing, processing, trading or service sector."
+    },
+    "documents": [
+      "Mudra Application Form",
+      "Business Plan / Project Report",
+      "Aadhaar Card / Voter ID / PAN Card",
+      "Proof of Business Address",
+      "Identity & Address Proof of Partners/Proprietors"
+    ],
+    "officialLink": "https://www.mudra.org.in/"
+  },
+  {
+    "id": "sukanya-samriddhi",
+    "name": "Sukanya Samriddhi Yojana (SSY)",
+    "category": "Women Empowerment",
+    "description": "A small deposit scheme for a girl child, launched as part of the 'Beti Bachao Beti Padhao' campaign. Offers high-interest rates and tax benefits under Section 80C.",
+    "benefits": "High compound interest rate (8.2%+), tax savings, and maturity funds reserved for the girl child's education or marriage.",
+    "eligibility": {
+      "occupations": ["All"],
+      "maxIncome": null,
+      "ageMin": 0,
+      "ageMax": 10,
+      "gender": "Female",
+      "extra": "Account can be opened by the natural or legal guardian for a girl child of age 10 years or below. Maximum of two accounts per family."
+    },
+    "documents": [
+      "Birth Certificate of the Girl Child",
+      "Identity Proof of Parent/Guardian (Aadhaar, PAN)",
+      "Address Proof of Parent/Guardian",
+      "Passport size photos of child and guardian"
+    ],
+    "officialLink": "https://www.indiapost.gov.in/"
+  },
+  {
+    "id": "pm-vidyalaxmi",
+    "name": "PM Vidyalaxmi Education Loan Portal",
+    "category": "Education",
+    "description": "A first-of-its-kind gateway for students seeking Education Loans. Students can view, apply and track education loan applications with multiple banks through a single form.",
+    "benefits": "Single window access to education loans from 40+ banks, interest subsidy schemes, and flexible repayment options.",
+    "eligibility": {
+      "occupations": ["Student"],
+      "maxIncome": 450000,
+      "ageMin": 16,
+      "ageMax": 35,
+      "gender": "All",
+      "extra": "Must have secured admission to a higher education course in India or abroad through merit-based selection."
+    },
+    "documents": [
+      "Proof of Admission & Fee Structure from College",
+      "Mark sheets of 10th/12th/Graduation",
+      "Aadhaar Card & PAN Card (Student and Co-borrower)",
+      "Income Certificate of parents / Co-borrower salary slips",
+      "Collateral security documents (for loans above ₹7.5 Lakhs)"
+    ],
+    "officialLink": "https://www.vidyalaxmi.co.in/"
+  },
+  {
+    "id": "atal-pension",
+    "name": "Atal Pension Yojana (APY)",
+    "category": "Social Security",
+    "description": "A pension scheme focused on unorganized sector workers. Provides a guaranteed minimum pension of ₹1,000 to ₹5,000 per month after the age of 60, depending on contributions.",
+    "benefits": "Guaranteed minimum monthly pension of up to ₹5,000 after reaching age 60.",
+    "eligibility": {
+      "occupations": ["Unemployed", "Farmer", "Business", "All"],
+      "maxIncome": null,
+      "ageMin": 18,
+      "ageMax": 40,
+      "gender": "All",
+      "extra": "Should not be a member of any statutory social security scheme and should not be an income tax payer."
+    },
+    "documents": [
+      "Aadhaar Card",
+      "Active Savings Bank Account",
+      "Mobile Number"
+    ],
+    "officialLink": "https://www.npscra.nsdl.co.in/"
+  },
+  {
+    "id": "standup-india",
+    "name": "Stand-Up India Scheme",
+    "category": "Business",
+    "description": "Promotes entrepreneurship among women and Scheduled Castes (SC) or Scheduled Tribes (ST). Provides bank loans between ₹10 Lakh and ₹1 Crore for starting a greenfield enterprise.",
+    "benefits": "Composite loans between ₹10 Lakhs and ₹1 Crore covering up to 75% of the project cost.",
+    "eligibility": {
+      "occupations": ["Business"],
+      "maxIncome": null,
+      "ageMin": 18,
+      "ageMax": null,
+      "gender": "Female",
+      "extra": "Specifically for Women or SC/ST entrepreneurs. Enterprise must be greenfield (first-time venture). In case of non-individual enterprise, 51% shareholding must be held by SC/ST/Women."
+    },
+    "documents": [
+      "Proof of Identity & Address",
+      "SC/ST Category Certificate (if applicable)",
+      "Business License / MSME registration",
+      "Project Report / Business Plan Details",
+      "Balance Sheets & Income Tax returns of promoters"
+    ],
+    "officialLink": "https://www.standupmitra.in/"
+  },
+  {
+    "id": "pmkvy",
+    "name": "Pradhan Mantri Kaushal Vikas Yojana (PMKVY)",
+    "category": "Education",
+    "description": "Skill certification scheme that aims to enable a large number of Indian youth to take up industry-relevant skill training that will help them secure a better livelihood.",
+    "benefits": "Free skill training, assessment fees coverage, government-recognized skill certificate, and placement support.",
+    "eligibility": {
+      "occupations": ["Student", "Unemployed"],
+      "maxIncome": null,
+      "ageMin": 15,
+      "ageMax": 45,
+      "gender": "All",
+      "extra": "Any school/college dropout or unemployed youth looking to upskill themselves. Aadhaar linkage is mandatory."
+    },
+    "documents": [
+      "Aadhaar Card",
+      "Voter ID / Bank Account Details",
+      "Educational qualification certificates (if any)"
+    ],
+    "officialLink": "https://www.pmkvyofficial.org/"
+  }
+]
