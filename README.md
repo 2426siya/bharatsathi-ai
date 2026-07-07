@@ -1,15 +1,12 @@
 # 🇮🇳 BharatSathi AI - Smart Bharat Civic Companion
 
-> **Submission for DEVENGERS PromptWars 2026**
->
-> A GenAI-powered, accessibility-first civic platform designed to democratize government services, simplify welfare schemes, and streamline public grievance reporting for every Indian citizen.
+BharatSathi AI is an accessibility-first, GenAI-powered civic companion platform designed to democratize government services, simplify welfare schemes, and streamline public grievance reporting for every Indian citizen.
 
 ---
 
 ## 🚀 Live App & Code Links
-- **Deployed Project Link:** [https://bharatsathi-ai.vercel.app](https://bharatsathi-ai.vercel.app) *(Deploy this repo to Vercel/Netlify with your Gemini API key)*
-- **GitHub Repository Link:** [Public Repository Link]
-- **YouTube Pitch/Demo:** [Link to Demo Video]
+- **Deployed Project Link:** [https://bharatsathi-ai.vercel.app](https://bharatsathi-ai.vercel.app)
+- **GitHub Repository Link:** [https://github.com/2426siya/bharatsathi-ai](https://github.com/2426siya/bharatsathi-ai)
 
 ---
 
@@ -40,9 +37,24 @@ Indian citizens often struggle to navigate complex bureaucratic processes, find 
 - AI automatically categorizes the complaint and drafts a formal grievance letter in **English, Hindi, and Marathi** with one-click copy.
 - Generates a **Mock Ticket Tracking ID** (e.g., `BS-2026-X4F9`) with an interactive status timeline.
 
-### 4. 📄 Document Checklist Generator
-- Dynamic checklists for key public processes (Passport, Driving License, PAN Card, Ration Card).
+### 4. 📄 Document Eligibility Guide
+- Dynamic checklists for key public processes (Passport, Aadhaar, PAN, Driving Licence, Income Certificate, Caste Certificate, Birth Certificate).
 - **DocAssistant AI:** A dedicated assistant to query document alternatives (e.g., "What if I don't have a registered rent agreement?").
+
+### 5. 📝 AI Form Assistant
+- Interactive guide for filling out official templates (Aadhaar Update, Passport Re-issue).
+- Click on any complex field (e.g. Care Of, Non-ECR Category, Resident status) and the AI explains what it means, what to write, and common mistakes to avoid.
+- File upload simulator for PDF/images.
+
+### 6. 📖 AI Document & Web Summarizer
+- Paste long, complicated government notifications, rules, or insert a website link to get a simplified, easy-to-understand layman summary.
+
+### 7. 🚨 AI Emergency Helper
+- Interactive guides for lost documents (Aadhaar, Passport, Ration Card) detailing immediate safety steps, required office locations, fees, and retrieval timelines.
+
+### 8. 🎭 Resilient Dual-Mode (Live vs Demo)
+- A smooth sliding toggle switch in the application header: `🟢 Live AI | 🎭 Demo Mode` (persisted in `localStorage`).
+- If Live AI fails due to rate limits, invalid keys, or network timeout, the application automatically displays a notification and switches to the offline Demo data layer without disrupting the user experience.
 
 ---
 
@@ -90,6 +102,8 @@ To maintain absolute correctness and structured responses, BharatSathi uses a th
    { "english": "...", "hindi": "...", "marathi": "..." }
    ```
    This ensures the React UI can parse and render the separate translations in tabs instantly.
+4. **Offline Fallback Layer:**
+   In case of connection drops or API limit errors, the unified AI service layer automatically handles exceptions and falls back to a mock demo data layer without breaking the user experience.
 
 ---
 
@@ -97,8 +111,8 @@ To maintain absolute correctness and structured responses, BharatSathi uses a th
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
-   cd promptwars-hackathon-2026
+   git clone https://github.com/2426siya/bharatsathi-ai.git
+   cd bharatsathi-ai
    ```
 
 2. **Install dependencies:**
@@ -111,7 +125,7 @@ To maintain absolute correctness and structured responses, BharatSathi uses a th
    ```env
    VITE_GEMINI_API_KEY=your_actual_gemini_api_key
    ```
-   *Note: If no API key is provided, the application automatically runs in an Offline Demo Mode with pre-configured responses for judges to evaluate UI flows.*
+   *Note: If no API key is provided, the application automatically runs in an Offline Demo Mode with pre-configured responses.*
 
 4. **Run the application locally:**
    ```bash
