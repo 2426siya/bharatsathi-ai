@@ -196,3 +196,65 @@ export async function explainFormField(fieldName, onSystemError) {
 
   return executeWithFallback(liveCall, demoCall, onSystemError);
 }
+
+/**
+ * 5. EMERGENCY ADVICE GENERATOR
+ */
+export async function getEmergencyAdvice(emergencyDescription, onSystemError) {
+  const liveCall = async () => {
+    const prompt = `Act as an expert Indian civic advisor. A citizen has an emergency: "${emergencyDescription}".
+Please provide details in the following exact JSON format (return ONLY the raw JSON block without markdown \`\`\`json wrappers):
+{
+  "name": "Emergency: ${emergencyDescription}",
+  "immediateAction": "[What to do immediately in 2 sentences]",
+  "office": "[Primary office or portal to visit]",
+  "fees": "[Estimated costs/fees or State 'Free']",
+  "timeline": "[Estimated working days or hours to resolve]",
+  "docs": "[List of required verification documents]"
+}`;
+
+    const response = await sendCivicMessage(prompt, [], 'English');
+    let text = response.trim();
+    if (text.startsWith('```')) {
+      text = text.replace(/^```json/, '').replace(/```$/, '').trim();
+    }
+    return JSON.parse(text);
+  };
+
+  const demoCall = () => {
+    const descLower = emergencyDescription.toLowerCase();
+    
+    if (descLower.includes('voter') || descLower.includes('election')) {
+      return {
+        name: "Emergency: Lost Voter ID Card",
+        immediateAction: "File an online Lost Document report on your state police portal. Download your digital e-EPIC card via the NVSP voter portal.",
+        office: "District Election Officer or local Booth Level Officer (BLO)",
+        fees: "Free online download; ₹25 for a physical replacement card request.",
+        timeline: "Instant online e-EPIC download; 15-30 days for new physical card delivery.",
+        docs: "Aadhaar Card, Reference ID from online application, and passport size photos."
+      };
+    }
+
+    if (descLower.includes('pan') || descLower.includes('tax')) {
+      return {
+        name: "Emergency: Lost PAN Card",
+        immediateAction: "Submit an online request for a reprint/duplicate PAN card on the Protean (NSDL) or UTITSL website. Report the loss to the local police if stolen.",
+        office: "NSDL / Protean e-Gov Portal or UTIITSL Center",
+        fees: "₹50 for physical dispatch within India; ₹5.80 for e-PAN download.",
+        timeline: "2 hours for digital e-PAN; 5-10 working days for physical card delivery.",
+        docs: "Aadhaar Card (matching DOB/name details) and proof of old PAN number (if available)."
+      };
+    }
+
+    return {
+      name: `Emergency: ${emergencyDescription}`,
+      immediateAction: "File an online Lost Document Report on your local police portal immediately. Keep a digital scan of all available backup identity proofs safe.",
+      office: "Concerned District Municipal Corporation / Seva Kendra",
+      fees: "₹50 - ₹200 depending on service stamps and reprint charges.",
+      timeline: "7-15 working days post manual verification of submitted papers.",
+      docs: "Aadhaar Card, copy of the Police Lost Report, and age/address verification papers."
+    };
+  };
+
+  return executeWithFallback(liveCall, demoCall, onSystemError);
+}

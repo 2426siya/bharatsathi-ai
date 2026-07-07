@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { chatWithCompanion } from '../services/aiService';
+import { chatWithCompanion, getEmergencyAdvice } from '../services/aiService';
 import { AlertOctagon, HelpCircle, Loader2, Sparkles, BookOpen, Link, AlertTriangle } from 'lucide-react';
 
 const EMERGENCY_MAPPING = {
@@ -35,6 +35,21 @@ export default function Summarizer() {
   const [webUrl, setWebUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedEmergency, setSelectedEmergency] = useState(null);
+  const [customEmergencyInput, setCustomEmergencyInput] = useState('');
+  const [emergencyLoading, setEmergencyLoading] = useState(false);
+
+  const handleCustomEmergencySubmit = async (e) => {
+    e.preventDefault();
+    if (!customEmergencyInput.trim()) return;
+    setEmergencyLoading(true);
+
+    const advice = await getEmergencyAdvice(customEmergencyInput, (err) => {
+      alert("Live AI is currently unavailable. Switching to Demo Mode for uninterrupted experience.");
+    });
+
+    setSelectedEmergency(advice);
+    setEmergencyLoading(false);
+  };
 
   const handleSummarize = async (e) => {
     e.preventDefault();
@@ -181,6 +196,24 @@ export default function Summarizer() {
               </button>
             ))}
           </div>
+
+          {/* Custom Emergency Input */}
+          <form onSubmit={handleCustomEmergencySubmit} className="flex gap-2 mb-6">
+            <input
+              type="text"
+              value={customEmergencyInput}
+              onChange={(e) => setCustomEmergencyInput(e.target.value)}
+              placeholder="Or type another emergency (e.g. Lost Voter ID)..."
+              className="flex-1 bg-slate-950/80 border border-slate-700/50 focus:border-indigo-500 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none"
+            />
+            <button
+              type="submit"
+              disabled={emergencyLoading || !customEmergencyInput.trim()}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-900 text-white text-xs font-semibold rounded-xl transition-all"
+            >
+              {emergencyLoading ? <Loader2 className="animate-spin" size={14} /> : "Search"}
+            </button>
+          </form>
 
           {selectedEmergency ? (
             <div className="space-y-4 bg-slate-950/40 border border-slate-800 rounded-xl p-5 relative overflow-hidden">
