@@ -158,7 +158,7 @@ export default function Companion() {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between px-6 py-4 bg-slate-800/80 border-b border-slate-700/50 gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg text-white shadow-indigo-500/20 shadow-md">
+          <div className="p-2 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg text-white shadow-indigo-500/20 shadow-md avatar-saffron-pulse">
             <Bot size={24} />
           </div>
           <div>
@@ -202,7 +202,7 @@ export default function Companion() {
           >
             <div
               className={`p-2 rounded-lg text-white ${
-                msg.sender === 'user' ? 'bg-indigo-600' : 'bg-slate-800/80 border border-slate-700/40'
+                msg.sender === 'user' ? 'bg-indigo-600' : 'bg-slate-800/80 border border-slate-700/40 avatar-saffron-pulse'
               }`}
             >
               {msg.sender === 'user' ? <User size={18} /> : <Bot size={18} />}
