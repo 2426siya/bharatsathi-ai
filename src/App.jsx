@@ -259,6 +259,8 @@ export default function App() {
           ].map((tab) => (
             <button
               key={tab.id}
+              id={`nav-btn-${tab.id}`}
+              aria-label={`Navigate to ${tab.label}`}
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 transition-all ${
                 activeTab === tab.id

@@ -325,9 +325,12 @@ export default function Companion() {
           handleSendMessage(inputText);
         }}
         className="p-4 bg-slate-800/60 border-t border-slate-700/50 flex gap-2 items-center"
+        role="search"
       >
         <button
           type="button"
+          id="chat-mic-btn"
+          aria-label="Toggle speech voice input"
           onClick={toggleSpeechInput}
           className={`p-3 rounded-xl transition-all ${
             isListening
@@ -341,6 +344,8 @@ export default function Companion() {
 
         <input
           type="text"
+          id="chat-text-input"
+          aria-label="Type message here for chat assistant"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder={isListening ? "Listening..." : "Type your query here (e.g. Passport requirements)..."}
@@ -350,6 +355,8 @@ export default function Companion() {
 
         <button
           type="submit"
+          id="chat-send-btn"
+          aria-label="Submit message"
           disabled={!inputText.trim() || loading}
           className="p-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 text-white disabled:text-slate-600 rounded-xl transition-all shadow-md shadow-indigo-600/10 flex items-center justify-center"
         >
