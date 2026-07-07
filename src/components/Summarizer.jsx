@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { sendCivicMessage } from '../services/gemini';
+import { chatWithCompanion } from '../services/aiService';
 import { AlertOctagon, HelpCircle, Loader2, Sparkles, BookOpen, Link, AlertTriangle } from 'lucide-react';
 
 const EMERGENCY_MAPPING = {
@@ -51,7 +51,14 @@ export default function Summarizer() {
 3. What actions must a citizen take now?`;
     }
 
-    const response = await sendCivicMessage(prompt, [], 'English');
+    const response = await chatWithCompanion(
+      prompt, 
+      [], 
+      'English',
+      (err) => {
+        alert("Live AI is currently unavailable. Switching to Demo Mode for uninterrupted experience.");
+      }
+    );
     setSummaryResponse(response);
     setLoading(false);
   };

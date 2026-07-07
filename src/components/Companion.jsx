@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { sendCivicMessage } from '../services/gemini';
+import { chatWithCompanion } from '../services/aiService';
 import { Send, Mic, MicOff, Volume2, VolumeX, Sparkles, MessageSquare, Bot, User } from 'lucide-react';
+
 
 const QUICK_CHIPS = [
   "How to get a Passport?",
@@ -77,9 +78,16 @@ export default function Companion() {
     setInputText('');
     setLoading(true);
 
-    // Call Gemini API (offline-resilient)
+    // Call AI service layer (offline-resilient demo / live switcher)
     const history = messages.slice(-10); // Keep last 10 messages for context
-    const responseText = await sendCivicMessage(textToSend, history, selectedLang);
+    const responseText = await chatWithCompanion(
+      textToSend, 
+      history, 
+      selectedLang,
+      (err) => {
+        alert("Live AI is currently unavailable. Switching to Demo Mode for uninterrupted experience.");
+      }
+    );
 
     // Add bot message
     const botMsg = {

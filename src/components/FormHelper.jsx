@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { sendCivicMessage } from '../services/gemini';
+import { explainFormField } from '../services/aiService';
 import { FileUp, HelpCircle, Loader2, Sparkles, HelpCircle as HelpIcon, FileText, CheckCircle2 } from 'lucide-react';
 
 const MOCK_FORMS = [
@@ -57,13 +57,9 @@ export default function FormHelper() {
     if (!customField.trim()) return;
     setLoading(true);
 
-    const prompt = `I am filling out a government application form. I came across a confusing field or term: "${customField}". 
-Please explain:
-1. What does this field mean in simple terms?
-2. What exactly should I fill or write in this section?
-3. What are the common mistakes to avoid?`;
-
-    const response = await sendCivicMessage(prompt, [], 'English');
+    const response = await explainFormField(customField, (err) => {
+      alert("Live AI is currently unavailable. Switching to Demo Mode for uninterrupted experience.");
+    });
     setCustomResponse(response);
     setLoading(false);
   };

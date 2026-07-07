@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { generateGrievanceLetters } from '../services/gemini';
+import { generateGrievance } from '../services/aiService';
 import { FileEdit, Clipboard, Check, Calendar, ArrowRight, Loader2, Sparkles, MapPin } from 'lucide-react';
 
 const DEPARTMENTS = [
@@ -49,19 +49,26 @@ export default function Grievance() {
     e.preventDefault();
     setLoading(true);
 
-    const generated = await generateGrievanceLetters(issue, department);
-    setLetters(generated);
+    const result = await generateGrievance(issue, department, (err) => {
+      alert("Live AI is currently unavailable. Switching to Demo Mode for uninterrupted experience.");
+    });
+    
+    setLetters({
+      english: result.english,
+      hindi: result.hindi,
+      marathi: result.marathi
+    });
 
-    // Create a new mock complaint item
-    const mockId = `BS-2026-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    // Create a new complaint item using metadata returned by the service
+    const complaintId = result.id || `BS-2026-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
     const newComplaint = {
-      id: mockId,
+      id: complaintId,
       issue,
       department,
       locality: locality || "General Locality",
       date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-      status: "Submitted",
-      stage: 1
+      status: result.status || "Submitted",
+      stage: result.stage || 1
     };
 
     setComplaints(prev => [newComplaint, ...prev]);

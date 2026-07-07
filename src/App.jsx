@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Companion from './components/Companion';
 import Schemes from './components/Schemes';
 import Grievance from './components/Grievance';
 import Checklist from './components/Checklist';
 import FormHelper from './components/FormHelper';
 import Summarizer from './components/Summarizer';
+import { getAiMode, setAiMode } from './services/aiService';
 import { 
   Bot, 
   Search, 
@@ -22,6 +23,16 @@ import {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [aiMode, setAiModeState] = useState(getAiMode());
+
+  // Sync mode state when changed globally (e.g., on automatic fallback)
+  useEffect(() => {
+    const handleModeChange = () => {
+      setAiModeState(getAiMode());
+    };
+    window.addEventListener('bharatsathi_mode_change', handleModeChange);
+    return () => window.removeEventListener('bharatsathi_mode_change', handleModeChange);
+  }, []);
   
   // Check if API Key is configured
   const apiKeySet = import.meta.env.VITE_GEMINI_API_KEY && 
@@ -186,19 +197,44 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col justify-between max-w-7xl mx-auto px-4 md:px-8 py-6 gap-8">
-      {/* Top Banner Warning if Offline */}
-      {!apiKeySet && (
+      
+      {/* Top Banner Warning if Offline and trying to run Live AI */}
+      {!apiKeySet && aiMode === 'live' && (
         <div className="bg-orange-500/10 border border-orange-500/20 text-orange-400 px-4 py-2.5 rounded-xl text-xs flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <AlertTriangle size={16} />
-            <span><strong>Offline Demo Mode Active:</strong> To unlock real-time Gemini LLM generations, add your <code>VITE_GEMINI_API_KEY</code> to the <code>.env</code> file or environment variables.</span>
+            <span><strong>No API Key Configured:</strong> Add <code>VITE_GEMINI_API_KEY</code> to the <code>.env</code> file or deployment variables. Switched back to Live AI request, but errors will trigger fallback.</span>
           </div>
           <a href="https://aistudio.google.com/" target="_blank" rel="noreferrer" className="underline font-semibold text-[10px] uppercase shrink-0">Get Free Key</a>
         </div>
       )}
 
+      {/* Demo Mode active premium banner */}
+      {aiMode === 'demo' && (
+        <div className="bg-indigo-900/20 border border-indigo-500/30 text-indigo-300 px-6 py-4 rounded-2xl text-xs flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg shadow-indigo-950/10 animate-fadeIn">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🎭</span>
+            <div>
+              <h4 className="font-bold text-slate-100 flex items-center gap-1">
+                Demo Mode Active
+              </h4>
+              <p className="text-[11px] text-slate-400 mt-0.5">Using offline high-fidelity AI responses for hackathon demonstrations.</p>
+            </div>
+          </div>
+          <button 
+            onClick={() => {
+              setAiMode('live');
+              setAiModeState('live');
+            }}
+            className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold rounded-lg transition-all"
+          >
+            Switch to Live AI
+          </button>
+        </div>
+      )}
+
       {/* Main Header / Navigation */}
-      <header className="flex flex-col md:flex-row justify-between items-center bg-slate-900/50 backdrop-blur-md border border-slate-850 p-5 rounded-2xl gap-4">
+      <header className="flex flex-col xl:flex-row justify-between items-center bg-slate-900/50 backdrop-blur-md border border-slate-850 p-5 rounded-2xl gap-4">
         {/* Brand */}
         <div className="flex items-center gap-3">
           <span className="text-2xl">🇮🇳</span>
@@ -235,6 +271,38 @@ export default function App() {
             </button>
           ))}
         </nav>
+
+        {/* Mode Toggle Switch (Accessible from every page) */}
+        <div className="flex items-center gap-1.5 bg-slate-950/60 p-1 rounded-xl border border-slate-800/80">
+          <button
+            onClick={() => {
+              setAiMode('live');
+              setAiModeState('live');
+            }}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all duration-300 ${
+              aiMode === 'live'
+                ? 'bg-emerald-600/35 border border-emerald-500/40 text-emerald-300 shadow'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            Live AI
+          </button>
+          <button
+            onClick={() => {
+              setAiMode('demo');
+              setAiModeState('demo');
+            }}
+            className={`px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all duration-300 ${
+              aiMode === 'demo'
+                ? 'bg-indigo-600/35 border border-indigo-500/40 text-indigo-300 shadow'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <span>🎭</span>
+            Demo Mode
+          </button>
+        </div>
       </header>
 
       {/* Main Content Area */}

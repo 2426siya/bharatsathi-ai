@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { sendCivicMessage } from '../services/gemini';
+import { chatWithCompanion } from '../services/aiService';
 import { FileCheck2, Bot, HelpCircle, Loader2, Info } from 'lucide-react';
 
 const SERVICES = [
@@ -15,36 +15,67 @@ const SERVICES = [
     ]
   },
   {
-    id: "driving-license",
-    name: "Permanent Driving License",
-    description: "Application after obtaining a Learner's License.",
+    id: "aadhaar",
+    name: "Aadhaar Card Update",
+    description: "Correction or update of biometric and demographic details.",
     docs: [
-      { name: "Learner's License", reason: "Active Learner's license issued at least 30 days prior." },
-      { name: "Aadhaar Card", reason: "Standard national identification and age validation." },
-      { name: "Address Proof", reason: "Voter ID, Passport, or Electricity bill matching current address." },
-      { name: "Form 1 & Form 1A (Medical)", reason: "Self-declaration of physical fitness or medical certificate if age is above 40." }
+      { name: "Proof of Identity (PoI)", reason: "PAN Card, Voter ID, Passport, or Driving License showing photo." },
+      { name: "Proof of Address (PoA)", reason: "Electricity bill, water bill, active bank statement, or registered lease deed." },
+      { name: "Proof of Date of Birth (PoB)", reason: "Birth certificate, 10th marksheet, or passport." }
     ]
   },
   {
-    id: "pan-card",
+    id: "pan",
     name: "New PAN Card (Form 49A)",
     description: "Permanent Account Number card for financial and tax filing.",
     docs: [
-      { name: "Proof of Identity (PoI)", reason: "Aadhaar Card, Voter ID, or Passport showing applicant's photo." },
-      { name: "Proof of Address (PoA)", reason: "Aadhaar Card, Bank statement, Post Office passbook, or Gas bill." },
-      { name: "Proof of Date of Birth (PoB)", reason: "Matriculation certificate, Aadhaar, Birth certificate, or driving license." },
-      { name: "Passport Size Photos", reason: "Two recent colour photographs (3.5 cm x 2.5 cm) for card printing." }
+      { name: "Aadhaar Card", reason: "Mandatory to seed with PAN. Enables instant paperless e-KYC and digital e-sign." },
+      { name: "Passport size photographs", reason: "Two recent color photographs (for physical card print output)." },
+      { name: "Proof of Identity / DOB", reason: "Standard fallback ID documents (Voter ID, driving license) if Aadhaar lacks complete details." }
     ]
   },
   {
-    id: "ration-card",
-    name: "NFSA Ration Card",
-    description: "Subsidized food grain card issued by State Food & Civil Supplies.",
+    id: "driving licence",
+    name: "Permanent Driving License",
+    description: "Application after obtaining a Learner's License.",
     docs: [
-      { name: "Aadhaar Cards of All Family Members", reason: "Mandatory de-duplication requirement under One Nation One Ration Card." },
-      { name: "Income Certificate", reason: "To verify household eligibility falls under priority (PHH) or Antyodaya (AAY) limits." },
-      { name: "Electricity Bill or Rent Receipt", reason: "To prove current domicile within the state boundaries." },
-      { name: "Bank Passbook of Female Head of Family", reason: "Required as the card is registered under the senior female member's name." }
+      { name: "Active Learner's License", reason: "Learner's License issued at least 30 days prior and less than 6 months old." },
+      { name: "Aadhaar Card", reason: "Primary identity and address document." },
+      { name: "RTO Form 1 & Form 1A", reason: "Fitness declarations. Form 1A (Medical Certificate) is mandatory if age is over 40." },
+      { name: "Slot Booking Receipt", reason: "Online fee transaction slip showing confirmed date of driving test." }
+    ]
+  },
+  {
+    id: "income certificate",
+    name: "Income Certificate",
+    description: "State government document verifying family annual income.",
+    docs: [
+      { name: "Aadhaar Card", reason: "Citizen identity record." },
+      { name: "Salary Slips / Form 16", reason: "Required for salaried individuals; bank accounts and ITR returns for business owners." },
+      { name: "Self-Declaration Affidavit", reason: "Stating family income sources. Verified by local Talathi / Patwari." },
+      { name: "Ration Card", reason: "Family unit identification proof." }
+    ]
+  },
+  {
+    id: "caste certificate",
+    name: "Caste Certificate",
+    description: "Document proving belonging to SC, ST, or OBC categories.",
+    docs: [
+      { name: "Aadhaar Card", reason: "Primary applicant identification." },
+      { name: "School Leaving Certificate", reason: "Must mention the father's/grandfather's caste to verify lineage." },
+      { name: "Affidavit / Caste Proof of Relatives", reason: "Caste certificate issued to father, sibling, or paternal uncle." },
+      { name: "Land registry records (7/12 Extract)", reason: "Proves long-term domicile of the family in the state." }
+    ]
+  },
+  {
+    id: "birth certificate",
+    name: "Birth Certificate",
+    description: "Primary official document certifying a person's birth.",
+    docs: [
+      { name: "Hospital Birth Slip", reason: "Discharge summary or birth registration slip provided by the delivery hospital." },
+      { name: "Aadhaar Cards of Parents", reason: "Required to register parents' identities on the certificate." },
+      { name: "Address Proof", reason: "Electricity bill or rent agreement showing parent's domicile." },
+      { name: "Marriage Certificate (Optional)", reason: "For matching spelling of surnames." }
     ]
   }
 ];
@@ -78,7 +109,17 @@ export default function Checklist() {
     setLoading(true);
 
     const prompt = `I am applying for a "${activeService.name}". I have a question regarding documents:\n"${aiQuestion}"\n\nPlease answer clearly and explain what alternative documents or procedures exist if the citizen does not have the standard files. Keep it concise.`;
-    const response = await sendCivicMessage(prompt, [], 'English');
+    
+    // Call unified AI Service Layer
+    const response = await chatWithCompanion(
+      prompt, 
+      [], 
+      'English',
+      (err) => {
+        alert("Live AI is currently unavailable. Switching to Demo Mode for uninterrupted experience.");
+      }
+    );
+
     setAiResponse(response);
     setLoading(false);
   };
@@ -115,7 +156,7 @@ export default function Checklist() {
                 }}
                 className={`p-3 text-xs font-semibold rounded-xl border text-center transition-all flex flex-col items-center justify-center gap-1 ${
                   selectedServiceId === service.id
-                    ? 'bg-indigo-600/30 border-indigo-500 text-indigo-300 shadow-md'
+                    ? 'bg-indigo-600/30 border-indigo-500 text-indigo-300 shadow-md animate-pulse'
                     : 'bg-slate-950/40 border-slate-800 text-slate-400 hover:text-slate-200'
                 }`}
               >

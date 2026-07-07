@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import schemesData from '../data/schemes.json';
-import { sendCivicMessage } from '../services/gemini';
+import { recommendSchemesForUser } from '../services/aiService';
 import { Search, HelpCircle, FileText, CheckCircle2, ChevronRight, Award, Compass } from 'lucide-react';
 
 const STATES = [
@@ -50,15 +50,19 @@ export default function Schemes() {
 
     setMatches(localMatches);
 
-    // Call Gemini API to build a personalized application roadmap
+    // Call AI service layer (offline-resilient demo / live switcher)
     if (localMatches.length > 0) {
-      const matchNames = localMatches.map(m => m.name).join(', ');
-      const prompt = `I am a ${age} year old ${gender} citizen from ${state}. My occupation is ${occupation} and my annual income is ₹${income}. 
-The database matched me with the following schemes: [${matchNames}].
-
-Please write a highly customized, step-by-step roadmap on how I can apply for these schemes. Keep it action-oriented, simple, and list the exact immediate steps to take.`;
-
-      const response = await sendCivicMessage(prompt, [], 'English');
+      const response = await recommendSchemesForUser(
+        age, 
+        state, 
+        occupation, 
+        income, 
+        gender, 
+        localMatches,
+        (err) => {
+          alert("Live AI is currently unavailable. Switching to Demo Mode for uninterrupted experience.");
+        }
+      );
       setAiRoadmap(response);
     } else {
       setAiRoadmap('');
