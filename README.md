@@ -56,6 +56,11 @@ Indian citizens often struggle to navigate complex bureaucratic processes, find 
 - A smooth sliding toggle switch in the application header: `🟢 Live AI | 🎭 Demo Mode` (persisted in `localStorage`).
 - If Live AI fails due to rate limits, invalid keys, or network timeout, the application automatically displays a notification and switches to the offline Demo data layer without disrupting the user experience.
 
+### 9. 🛡️ AI Safety Shield
+- Active client-side scanning for sensitive user credentials (Aadhaar, PAN, Card numbers, Passwords, OTP, PINs, etc.) prior to transmitting requests to the AI.
+- Displays a professional warning modal overlay (`⚠️ Sensitive Information Detected`) requesting the user to edit/mask their details, with full bypass controls if they choose to proceed anyway.
+- Employs non-intrusive safety banner cards and persistent privacy footers in the UI chat feed to raise data-privacy awareness.
+
 ---
 
 ## 🛠️ Tech Stack & Architecture
